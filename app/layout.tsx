@@ -2,39 +2,39 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AIONYX Prediction",
-  description: "AI-assisted market outlook • real price • confidence scores",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  title: "AIONYX — Predictive Intelligence",
+  description: "Steel-grade market signal. Neon precision.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body>
-        <div className="bg-grid" />
-        <div className="app-shell">
-          <header className="topbar">
-            <div className="brand">
-              <div className="brand-mark" />
-              <div className="brand-text">
-                <div className="brand-title">AIONYX</div>
-                <div className="brand-sub">Corporate Tech • Predictive Intelligence</div>
-              </div>
-            </div>
-
-            <div className="topbar-right">
-              <span className="pill">Live</span>
-              <span className="pill pill-muted">CoinGecko</span>
-              <span className="pill pill-muted">OpenAI</span>
+      <body className="bg-black text-slate-100 antialiased">
+        <div className="min-h-screen flex flex-col">
+          {/* Top Bar */}
+          <header className="border-b border-blue-500/20 bg-black/60 backdrop-blur-md">
+            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+              <h1 className="text-xl font-semibold tracking-widest text-blue-400 neon-text">
+                AIONYX
+              </h1>
+              <span className="text-xs text-blue-300/70 uppercase tracking-wider">
+                Live Predictive Signal
+              </span>
             </div>
           </header>
 
-          <main className="content">{children}</main>
+          {/* Main */}
+          <main className="flex-1 flex items-center justify-center px-6">
+            {children}
+          </main>
 
-          <footer className="footer">
-            <span>Not financial advice. For research/education.</span>
-            <span className="dot">•</span>
-            <span>Zero client-side keys. Server routes only.</span>
+          {/* Footer */}
+          <footer className="border-t border-blue-500/10 text-center py-4 text-xs text-blue-400/50">
+            © {new Date().getFullYear()} Voltara Systems
           </footer>
         </div>
       </body>
