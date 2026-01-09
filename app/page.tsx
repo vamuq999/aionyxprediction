@@ -1,63 +1,59 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-type Signal = {
-  asset: string;
-  direction: "LONG" | "SHORT";
-  confidence: number;
-  price: string;
-};
+import { useState } from "react";
 
 export default function Page() {
-  const [signals, setSignals] = useState<Signal[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState("");
 
-  useEffect(() => {
-    // Mock living signal feed (swap for API later)
-    setSignals([
-      { asset: "BTC", direction: "LONG", confidence: 78, price: "$42,180" },
-      { asset: "ETH", direction: "LONG", confidence: 71, price: "$2,310" },
-      { asset: "SOL", direction: "SHORT", confidence: 64, price: "$98.40" },
-    ]);
-  }, []);
+  async function runPrediction() {
+    setLoading(true);
+    setResult("");
+
+    try {
+      // 1️⃣ Fetch REAL BTC price
+      const priceRes = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+        { cache: "no-store" }
+      );
+      const priceData = await priceRes.json();
+      const btcPrice = priceData.bitcoin.usd;
+
+      // 2️⃣ Ask OpenAI to ANALYZE (not invent)
+      const aiRes = await fetch("/api/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ btcPrice }),
+      });
+
+      const aiData = await aiRes.json();
+      setResult(
+        `BTC Price: $${btcPrice}\n\n` +
+        `Bias: ${aiData.bias}\n` +
+        `Confidence: ${aiData.confidence}%\n\n` +
+        `${aiData.reasoning}`
+      );
+    } catch (err) {
+      setResult("Error fetching prediction.");
+    }
+
+    setLoading(false);
+  }
 
   return (
-    <section className="dashboard">
-      <div className="hero">
-        <h1>Predictive Signal Core</h1>
-        <p>Adaptive intelligence reading probability, momentum, and bias.</p>
+    <main className="container">
+      <div className="card">
+        <h1>AIONYX Prediction</h1>
+        <div className="sub">
+          AI-assisted market outlook · real price · zero hallucinations
+        </div>
+
+        <button onClick={runPrediction} disabled={loading}>
+          {loading ? "Calculating…" : "Generate Prediction"}
+        </button>
+
+        {result && <div className="output">{result}</div>}
       </div>
-
-      <div className="signal-grid">
-        {signals.map((s, i) => (
-          <div key={i} className="signal-card">
-            <div className="signal-header">
-              <span className="asset">{s.asset}</span>
-              <span className={`direction ${s.direction.toLowerCase()}`}>
-                {s.direction}
-              </span>
-            </div>
-
-            <div className="price">{s.price}</div>
-
-            <div className="confidence">
-              <div
-                className="confidence-bar"
-                style={{ width: `${s.confidence}%` }}
-              />
-              <span>{s.confidence}% confidence</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="oracle-panel">
-        <h2>Oracle Commentary</h2>
-        <p>
-          Market volatility compressing. Bias skewed bullish with asymmetric
-          downside protection. Risk-on positioning advised with tight invalidation.
-        </p>
-      </div>
-    </section>
+    </main>
   );
 }
