@@ -1,42 +1,40 @@
+// app/layout.tsx
 import "./globals.css";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "AIONYX — Predictive Intelligence",
-  description: "Steel-grade market signal. Neon precision.",
+export const metadata = {
+  title: "AIONYX Prediction — Bull Finder",
+  description: "Telemetry-grade bull/bear detection with live market signals.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-black text-slate-100 antialiased">
-        <div className="min-h-screen flex flex-col">
-          {/* Top Bar */}
-          <header className="border-b border-blue-500/20 bg-black/60 backdrop-blur-md">
-            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-              <h1 className="text-xl font-semibold tracking-widest text-blue-400 neon-text">
-                AIONYX
-              </h1>
-              <span className="text-xs text-blue-300/70 uppercase tracking-wider">
-                Live Predictive Signal
-              </span>
+      <body>
+        <div className="bgGrid" />
+        <div className="scanlines" />
+        <div className="halo" />
+        <header className="topbar">
+          <div className="brand">
+            <div className="logoMark" />
+            <div className="brandText">
+              <div className="brandTitle">AIONYX Prediction</div>
+              <div className="brandSub">Bull Finder • Telemetry Console</div>
             </div>
-          </header>
+          </div>
 
-          {/* Main */}
-          <main className="flex-1 flex items-center justify-center px-6">
-            {children}
-          </main>
+          <div className="topRight">
+            <span className="pill">LIVE</span>
+            <span className="pill ghost">No installs • Phone-safe</span>
+          </div>
+        </header>
 
-          {/* Footer */}
-          <footer className="border-t border-blue-500/10 text-center py-4 text-xs text-blue-400/50">
-            © {new Date().getFullYear()} Voltara Systems
-          </footer>
-        </div>
+        <main className="shell">{children}</main>
+
+        <footer className="footer">
+          <span>© {new Date().getFullYear()} AIONYX</span>
+          <span className="dot">•</span>
+          <span>Signals are informational — not financial advice.</span>
+        </footer>
       </body>
     </html>
   );
