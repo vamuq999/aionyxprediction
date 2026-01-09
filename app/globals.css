@@ -1,55 +1,38 @@
-* {
-  box-sizing: border-box;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Base */
+html,
 body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: #e5e7eb;
+  background-color: #000;
 }
 
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 48px 24px;
+/* Neon text effect */
+.neon-text {
+  text-shadow:
+    0 0 6px rgba(0, 140, 255, 0.6),
+    0 0 12px rgba(0, 140, 255, 0.4),
+    0 0 24px rgba(0, 140, 255, 0.25);
 }
 
-.card {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+/* Neon ring glow */
+.neon-ring {
+  box-shadow:
+    0 0 30px rgba(0, 140, 255, 0.25),
+    inset 0 0 30px rgba(0, 140, 255, 0.15);
 }
 
-h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
+/* Scrollbar (optional but icy) */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.sub {
-  color: #94a3b8;
-  margin-bottom: 24px;
+::-webkit-scrollbar-track {
+  background: #05070a;
 }
 
-button {
-  background: linear-gradient(135deg, #6366f1, #22d3ee);
-  border: none;
-  border-radius: 12px;
-  padding: 12px 18px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #020617;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.output {
-  margin-top: 24px;
-  line-height: 1.6;
-  white-space: pre-wrap;
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 140, 255, 0.4);
+  border-radius: 999px;
 }
