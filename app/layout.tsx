@@ -2,8 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AIONYX · Living Predictive NFT",
-  description: "A living interface for predictive NFTs and evolving intelligence.",
+  title: "AIONYX",
+  description: "Living Predictive Interface",
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        {children}
       </body>
     </html>
   );
