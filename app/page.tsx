@@ -2,74 +2,73 @@
 
 import { useEffect, useState } from "react";
 
-type PredictionResult = {
+type Result = {
   prediction: number;
   confidence: number;
-  state: "bullish" | "bearish" | "neutral";
-  entropy: number;
-  timestamp: number;
+  state: string;
 };
 
-export default function HomePage() {
-  const [data, setData] = useState<PredictionResult | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function fetchPrediction() {
-    setLoading(true);
-
-    const res = await fetch("/api/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        features: {
-          momentum: Math.random() * 2 - 1,
-          trend: Math.random() * 2 - 1,
-          volatility: Math.random(),
-          sentiment: Math.random() * 2 - 1,
-        },
-      }),
-    });
-
-    const json = await res.json();
-    setData(json.result);
-    setLoading(false);
-  }
+export default function Page() {
+  const [data, setData] = useState<Result | null>(null);
+  const [status, setStatus] = useState<"loading" | "error" | "ready">("loading");
 
   useEffect(() => {
-    fetchPrediction();
-    const id = setInterval(fetchPrediction, 15000); // living pulse
-    return () => clearInterval(id);
+    async function load() {
+      try {
+        const res = await fetch("/api/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            features: {
+              momentum: 0.3,
+              trend: 0.2,
+              volatility: 0.4,
+              sentiment: 0.1,
+            },
+          }),
+        });
+
+        if (!res.ok) throw new Error("API failed");
+
+        const json = await res.json();
+        setData(json.result);
+        setStatus("ready");
+      } catch {
+        setStatus("error");
+      }
+    }
+
+    load();
   }, []);
 
   return (
     <div className="card">
-      <div className="halo" />
+      <div className="orb" />
 
       <h1>AIONYX</h1>
       <p>Living Predictive Interface</p>
 
-      {loading && <p>Calculating signal…</p>}
+      {status === "loading" && <p>Calculating signal…</p>}
 
-      {data && (
+      {status === "error" && (
+        <p style={{ color: "#ff6b6b" }}>
+          Signal offline — API not responding
+        </p>
+      )}
+
+      {status === "ready" && data && (
         <>
           <div className="stat">
             <span>State</span>
             <span>{data.state}</span>
           </div>
-
           <div className="stat">
             <span>Prediction</span>
             <span>{data.prediction}</span>
           </div>
-
           <div className="stat">
             <span>Confidence</span>
             <span>{Math.round(data.confidence * 100)}%</span>
-          </div>
-
-          <div className="stat">
-            <span>Entropy</span>
-            <span>{data.entropy}</span>
           </div>
         </>
       )}
